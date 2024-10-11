@@ -20,6 +20,6 @@ steps:
           --service-account="for-ner@dspl-ai-ml-coe-pocs.iam.gserviceaccount.com" \
           --set-iam-policy="serviceAccount:for-ner@dspl-ai-ml-coe-pocs.iam.gserviceaccount.com:roles/run.invoker" \
           --no-allow-unauthenticated
-
+#everything is correct
 options:
   logging: CLOUD_LOGGING_ONLY
