@@ -25,4 +25,6 @@ steps:
           --set-iam-policy="serviceAccount:for-ner@dspl-ai-ml-coe-pocs.iam.gserviceaccount.com:roles/run.invoker" \
           --no-allow-unauthenticated
 
-
+# Specify the logs bucket here
+options:
+  logging: NONE
