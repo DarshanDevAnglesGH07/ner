@@ -27,4 +27,4 @@ steps:
 
 # Specify the logs bucket here
 options:
-  logging: NONE
+  logging: CLOUD_LOGGING_ONLY
