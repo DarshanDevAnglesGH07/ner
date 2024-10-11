@@ -24,3 +24,7 @@ steps:
           --service-account="for-ner@dspl-ai-ml-coe-pocs.iam.gserviceaccount.com" \
           --set-iam-policy="serviceAccount:for-ner@dspl-ai-ml-coe-pocs.iam.gserviceaccount.com:roles/run.invoker" \
           --no-allow-unauthenticated
+
+# Specify the logs bucket here
+options:
+  logs_bucket: gs://ner-spacy-model
