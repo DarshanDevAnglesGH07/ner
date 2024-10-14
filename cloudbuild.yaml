@@ -12,14 +12,26 @@ steps:
       - '-c'
       - |
         gcloud auth configure-docker us-central1-docker.pkg.dev
-        gcloud iam service-accounts keys create deployment-key.json \
           --iam-account="for-ner@dspl-ai-ml-coe-pocs.iam.gserviceaccount.com"
         gcloud run deploy your-service-name \
           --image us-central1-docker.pkg.dev/dspl-ai-ml-coe-pocs/ner-with-rl/reinforcement-learning \
           --platform managed \
           --service-account="for-ner@dspl-ai-ml-coe-pocs.iam.gserviceaccount.com" \
-          --set-iam-policy="serviceAccount:for-ner@dspl-ai-ml-coe-pocs.iam.gserviceaccount.com:roles/run.invoker" \
-          --no-allow-unauthenticated
+          --allow-unauthenticated
+  
+  - name: deployment
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        echo "Deploying to Cloud Run.....!"
+        gcloud run deploy "reinforcement-learning" \
+          --source . \
+          --project="dspl-ai-ml-coe-pocs" \
+          --service-account="for-ner@dspl-ai-ml-coe-pocs.iam.gserviceaccount.com" \
+          --region="us-central1" \
+          --platform managed \
+          --allow-unauthenticated
 
-options:
-  logging: CLOUD_LOGGING_ONLY
+    
+
