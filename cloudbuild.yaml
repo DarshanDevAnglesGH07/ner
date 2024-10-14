@@ -4,7 +4,7 @@ steps:
     args: ['install', '-r', 'requirements.txt']
 
   - name: us-central1-docker.pkg.dev/dspl-ai-ml-coe-pocs/ner-with-rl/reinforcement-learning
-    entrypoint: bash
+    entrypoint: 'bash'
     args:
       - '-c'
       - |
