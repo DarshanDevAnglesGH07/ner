@@ -3,10 +3,10 @@ steps:
     entrypoint: pip
     args: ['install', '-r', 'requirements.txt']
 
-  - name: gcr.io/cloud-builders/gcloud
+  - name: building
     args: ['builds', 'submit', '--tag', 'us-central1-docker.pkg.dev/dspl-ai-ml-coe-pocs/ner-with-rl/reinforcement-learning:latest', '.']
 
-  - name: gcr.io/cloud-builders/gcloud
+  - name: connection
     entrypoint: bash
     args:
       - '-c'
