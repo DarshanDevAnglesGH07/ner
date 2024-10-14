@@ -6,7 +6,7 @@ steps:
   - name: building
     args: ['builds', 'submit', '--tag', 'us-central1-docker.pkg.dev/dspl-ai-ml-coe-pocs/ner-with-rl/reinforcement-learning:latest', '.']
 
-  - name: connection
+  - name: connection_1
     entrypoint: bash
     args:
       - '-c'
