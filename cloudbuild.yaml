@@ -9,8 +9,6 @@ steps:
       - '-c'
       - |
         gcloud auth configure-docker us-central1-docker.pkg.dev \
-          --iam-account="for-ner@dspl-ai-ml-coe-pocs.iam.gserviceaccount.com"
-        gcloud run reinforcement-learning \
           --image us-central1-docker.pkg.dev/dspl-ai-ml-coe-pocs/ner-with-rl/reinforcement-learning \
           --platform managed \
           --service-account="for-ner@dspl-ai-ml-coe-pocs.iam.gserviceaccount.com" \
