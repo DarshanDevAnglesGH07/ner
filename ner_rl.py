@@ -5,6 +5,7 @@ import json
 import os
 from google.cloud import storage
 
+
 client = storage.Client()
 bucket_name = "spacy-new"
 bucket = client.bucket(bucket_name)
@@ -12,9 +13,17 @@ bucket = client.bucket(bucket_name)
 @st.cache_resource
 def load_model():
     """Load the NER model from GCS."""
-    model_blob = bucket.blob("model-best/")
-    model_blob.download_to_filename("model-best")  
-    return spacy.load("model-best")
+    local_model_dir = "model-best"
+    if not os.path.exists(local_model_dir):
+        os.makedirs(local_model_dir)
+
+    blobs = bucket.list_blobs(prefix="model-best/")
+    for blob in blobs:
+        file_path = os.path.join(local_model_dir, os.path.relpath(blob.name, "model-best/"))
+        os.makedirs(os.path.dirname(file_path), exist_ok=True)
+        blob.download_to_filename(file_path)
+
+    return spacy.load(local_model_dir)
 
 @st.cache_data
 def load_data():
@@ -22,7 +31,6 @@ def load_data():
     corrected_entities_store = {}
     feedback_history = []
 
- 
     try:
         corrected_blob = bucket.blob("corrected_entities.json")
         corrected_blob.download_to_filename("corrected_entities.json")
@@ -64,7 +72,6 @@ def save_data(corrected_entities_store, feedback_history):
 
 nlp = load_model()
 corrected_entities_store, feedback_history = load_data()
-
 q_table = {}
 learning_rate = 0.1
 discount_factor = 0.9
