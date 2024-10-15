@@ -12,7 +12,7 @@ bucket = client.bucket(bucket_name)
 @st.cache_resource
 def load_model():
     """Load the NER model from GCS."""
-    model_blob = bucket.blob("model-best")
+    model_blob = bucket.blob("model-best/")
     model_blob.download_to_filename("model-best")  
     return spacy.load("model-best")
 
