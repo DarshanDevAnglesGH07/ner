@@ -6,7 +6,7 @@ import os
 from google.cloud import storage
 
 client = storage.Client()
-bucket_name = "ner-spacy-model"
+bucket_name = "spacy-new"
 bucket = client.bucket(bucket_name)
 
 @st.cache_resource
