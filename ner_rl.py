@@ -5,7 +5,6 @@ import json
 import os
 from google.cloud import storage
 
-
 client = storage.Client()
 bucket_name = "spacy-new"
 bucket = client.bucket(bucket_name)
@@ -31,30 +30,31 @@ def load_data():
     corrected_entities_store = {}
     feedback_history = []
 
+    # Load corrected entities
     try:
         corrected_blob = bucket.blob("corrected_entities.json")
-        corrected_blob.download_to_filename("corrected_entities.json")
-        with open("corrected_entities.json", "r") as f:
-            corrected_entities_store = json.load(f)
+        if corrected_blob.exists(client):
+            corrected_blob.download_to_filename("corrected_entities.json")
+            with open("corrected_entities.json", "r") as f:
+                corrected_entities_store = json.load(f)
     except Exception as e:
         st.warning(f"Could not load corrected entities: {e}")
-        with open("corrected_entities.json", "w") as f:
-            json.dump(corrected_entities_store, f)
 
+    # Load feedback history
     try:
         feedback_blob = bucket.blob("feedback_history.json")
-        feedback_blob.download_to_filename("feedback_history.json")
-        with open("feedback_history.json", "r") as f:
-            feedback_history = json.load(f)
+        if feedback_blob.exists(client):
+            feedback_blob.download_to_filename("feedback_history.json")
+            with open("feedback_history.json", "r") as f:
+                feedback_history = json.load(f)
     except Exception as e:
         st.warning(f"Could not load feedback history: {e}")
-        with open("feedback_history.json", "w") as f:
-            json.dump(feedback_history, f)
 
     return corrected_entities_store, feedback_history
 
 def save_data(corrected_entities_store, feedback_history):
     try:
+        # Save corrected entities
         with open("corrected_entities.json", "w") as f:
             json.dump(corrected_entities_store, f)
         corrected_blob = bucket.blob("corrected_entities.json")
@@ -63,6 +63,7 @@ def save_data(corrected_entities_store, feedback_history):
         st.error(f"Error saving corrected entities: {e}")
 
     try:
+        # Save feedback history
         with open("feedback_history.json", "w") as f:
             json.dump(feedback_history, f)
         feedback_blob = bucket.blob("feedback_history.json")
@@ -107,13 +108,11 @@ if text in corrected_entities_store:
     st.subheader("Previously Corrected Entities:")
     for original, corrected in corrected_entities_store[text].items():
         st.write(f"Original: {original} -> Corrected: {corrected}")
-
 else:
     if text:
         doc = nlp(text)
 
         initialize_q_table([ent.text for ent in doc.ents])  
-
         corrected_entities = {}  
 
         recognized_entities = doc.ents  
@@ -123,12 +122,10 @@ else:
                 st.write(f"  {ent.text} (Type: {ent.label_})")  
 
         st.subheader("Previously Corrected Entities:")
-
         for ent, corrected in corrected_entities_store.get(text, {}).items():
             st.write(f"Original: {ent} -> Corrected: {corrected}")  
 
         st.subheader("Correction")    
-
         for ent in recognized_entities:
             st.write(f"  {ent.text} (Type: {ent.label_})")
             
@@ -149,7 +146,6 @@ else:
 
         if corrected_entities:
             corrected_entities_store[text] = corrected_entities
-
             st.subheader("Corrected Entities:")
             for original, corrected in corrected_entities.items():
                 st.write(f"Original: {original} -> Corrected: {corrected}")
@@ -165,6 +161,7 @@ if unrecognized_entity and entity_type:
     corrected_entities_store[text][unrecognized_entity] = entity_type
     st.success(f"Added unrecognized entity: '{unrecognized_entity}' of type '{entity_type}'")
 
+# Save data at the end to ensure all updates are captured
 save_data(corrected_entities_store, feedback_history)
 
 st.subheader("Current Q-Table:")
