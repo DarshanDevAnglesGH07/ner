@@ -160,6 +160,7 @@ if unrecognized_entity and entity_type:
         corrected_entities_store[text] = {}
     corrected_entities_store[text][unrecognized_entity] = entity_type
     st.success(f"Added unrecognized entity: '{unrecognized_entity}' of type '{entity_type}'")
+    
 
 # Save data at the end to ensure all updates are captured
 save_data(corrected_entities_store, feedback_history)
